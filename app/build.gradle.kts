@@ -3,12 +3,12 @@ plugins {
     id("org.jetbrains.kotlin.android")
     //
     id("kotlin-parcelize")
-    id("androidx.navigation.safeargs")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
     namespace = "com.app.mobileapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.app.mobileapp"
@@ -35,6 +35,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+    viewBinding {
+        enable = true
     }
 }
 

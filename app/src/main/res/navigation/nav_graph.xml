@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/listStudentFragment">
+
+    <fragment
+        android:id="@+id/listStudentFragment"
+        android:name="com.app.mobileapp.presentation.fragment.ListStudentFragment"
+        android:label="ListStudentFragment" >
+        <action
+            android:id="@+id/action_listStudentFragment_to_addStudentFragment"
+            app:destination="@id/addStudentFragment" />
+        <action
+            android:id="@+id/action_listStudentFragment_to_editStudentFragment"
+            app:destination="@id/editStudentFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addStudentFragment"
+        android:name="com.app.mobileapp.presentation.fragment.AddStudentFragment"
+        android:label="AddStudentFragment">
+        <argument
+            android:name="studentId"
+            app:argType="string" />
+        <argument
+            android:name="studentName"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/editStudentFragment"
+        android:name="com.app.mobileapp.presentation.fragment.EditStudentFragment"
+        android:label="EditStudentFragment">
+        <argument
+            android:name="studentId"
+            app:argType="string" />
+        <argument
+            android:name="studentName"
+            app:argType="string" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_listStudentFragment"
+        app:destination="@id/listStudentFragment" /><action android:id="@+id/action_global_addStudentFragment" app:destination="@id/addStudentFragment"/>
+
+</navigation>
