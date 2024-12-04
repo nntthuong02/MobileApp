@@ -1,7 +1,5 @@
 package com.app.mobileapp.presentation.fragment
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.ContextMenu
@@ -19,7 +17,6 @@ import com.app.mobileapp.R
 import com.app.mobileapp.common.Constants
 import com.app.mobileapp.data.models.StudentModel
 import com.app.mobileapp.databinding.FragmentListStudentBinding
-import com.app.mobileapp.presentation.activities.MainActivity
 import com.app.mobileapp.presentation.adapter.StudentAdapter2
 import com.app.mobileapp.presentation.viewmodels.StudentViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -40,21 +37,25 @@ class ListStudentFragment : Fragment() {
             viewLifecycleOwner
         ) { requestKey, result ->
             Log.d("requestKey", requestKey)
+            Log.d("ListStudentFragment", "Result sent: $result")
             // Xử lý kết quả từ Fragment B
             val studentName = result.getString(Constants.EDIT_STUDENT_NAME)
             val studentId = result.getString(Constants.EDIT_STUDENT_ID)
+            val checkStudentId = result.getString(Constants.EDIT_STUDENT_RESULT)
             if (studentName != null && studentId != null) {
                 val student = StudentModel(studentName, studentId)
-                viewModel.editStudent(student)
+                Log.d("editStudent", "ok1")
+                viewModel.editStudent(student, checkStudentId?:"")
+                Log.d("editStudent", "ok2")
+
             }
         }
 
         parentFragmentManager.setFragmentResultListener(
-            Constants.EDIT_STUDENT_RESULT,
+            Constants.ADD_STUDENT_RESULT,
             viewLifecycleOwner
         ) { requestKey, result ->
             Log.d("requestKey", requestKey)
-            // Xử lý kết quả từ Fragment A
             val studentName = result.getString(Constants.ADD_STUDENT_NAME)
             val studentId = result.getString(Constants.ADD_STUDENT_ID)
             if (studentName != null && studentId != null) {

@@ -1,4 +1,5 @@
 package com.app.mobileapp.presentation.viewmodels
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,11 +23,13 @@ class StudentViewModel : ViewModel() {
         _students.value = studentList
     }
 
-    fun editStudent(editedStudent: StudentModel) {
-        val index = studentList.indexOfFirst { it.studentId == editedStudent.studentId }
+    fun editStudent(editedStudent: StudentModel, checkId: String) {
+        val index = studentList.indexOfFirst { it.studentId == checkId }
         if (index != -1) {
             studentList[index] = editedStudent
             _students.value = studentList
+            Log.d("editStudent", "ok3")
+
         }
     }
 

@@ -28,7 +28,7 @@ class AddStudentFragment : Fragment() {
                     putString(Constants.ADD_STUDENT_ID, updateId)
                     putString(Constants.ADD_STUDENT_NAME, updateName)
                 }
-                parentFragmentManager.setFragmentResult(Constants.EDIT_STUDENT_RESULT, result)
+                parentFragmentManager.setFragmentResult(Constants.ADD_STUDENT_RESULT, result)
                 findNavController().navigate(R.id.action_global_listStudentFragment)
             }
         }
