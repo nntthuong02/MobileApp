@@ -6,11 +6,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".presentation.activities.MainActivity">
 
+    <Button
+        android:id="@+id/btnAddAllData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add All Data"
+        android:layout_margin="16dp"
+        android:layout_gravity="center"
+        app:layout_constraintHeight_percent="0.2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <ListView
         android:id="@+id/list_view_students"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.8"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

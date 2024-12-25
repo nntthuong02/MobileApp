@@ -2,6 +2,7 @@ package com.app.mobileapp.presentation.viewmodels
 
 import android.app.Application
 import android.content.ContentValues
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -33,6 +34,7 @@ class StudentViewModelDb(application: Application) : AndroidViewModel(applicatio
         }
         cursor.close()
         _students.value = studentList
+        Log.d("_students", _students.value.toString())
     }
 
     fun addStudent(student: StudentModel) {
@@ -73,4 +75,25 @@ class StudentViewModelDb(application: Application) : AndroidViewModel(applicatio
     fun undoDelete(student: StudentModel, position: Int) {
         addStudent(student)
     }
+
+    fun addAllStudents(students: List<StudentModel>) {
+        val db = dbHelper.writableDatabase
+        db.beginTransaction()
+        try {
+            for (student in students) {
+                val values = ContentValues().apply {
+                    put(StudentDatabaseHelper.COLUMN_ID, student.studentId)
+                    put(StudentDatabaseHelper.COLUMN_NAME, student.studentName)
+                }
+                db.insert(StudentDatabaseHelper.TABLE_NAME, null, values)
+            }
+            db.setTransactionSuccessful()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.endTransaction()
+        }
+        loadStudents()
+    }
+
 }

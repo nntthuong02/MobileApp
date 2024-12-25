@@ -18,13 +18,16 @@ import com.app.mobileapp.common.Constants
 import com.app.mobileapp.data.models.StudentModel
 import com.app.mobileapp.databinding.FragmentListStudentBinding
 import com.app.mobileapp.presentation.adapter.StudentAdapter2
-import com.app.mobileapp.presentation.viewmodels.StudentViewModel
+import com.app.mobileapp.presentation.viewmodels.StudentViewModelDb
+import com.app.mobileapp.utils.StudentDataSource
 import com.google.android.material.snackbar.Snackbar
 
 class ListStudentFragment : Fragment() {
     private var binding: FragmentListStudentBinding? = null
-    private val viewModel: StudentViewModel by viewModels()
+    private val viewModel: StudentViewModelDb by viewModels()
     private lateinit var studentAdapter: ArrayAdapter<StudentModel>
+
+    private val studentData = StudentDataSource().getStudentData()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -62,6 +65,12 @@ class ListStudentFragment : Fragment() {
                 val student = StudentModel(studentName, studentId)
                 viewModel.addStudent(student)
             }
+        }
+
+        binding?.btnAddAllData?.setOnClickListener {
+            viewModel.addAllStudents(studentData)
+            Toast.makeText(requireContext(), "All students added to the database", Toast.LENGTH_SHORT).show()
+            studentAdapter.notifyDataSetChanged()
         }
     }
 

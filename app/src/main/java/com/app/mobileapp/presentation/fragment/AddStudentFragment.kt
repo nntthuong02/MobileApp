@@ -22,8 +22,8 @@ class AddStudentFragment : Fragment() {
         binding?.apply {
 
             btnAdd.setOnClickListener{
-                val updateId = etStudentName.text.toString()
-                val updateName = etStudentId.text.toString()
+                val updateName = etStudentName.text.toString()
+                val updateId = etStudentId.text.toString()
                 val result = Bundle().apply {
                     putString(Constants.ADD_STUDENT_ID, updateId)
                     putString(Constants.ADD_STUDENT_NAME, updateName)

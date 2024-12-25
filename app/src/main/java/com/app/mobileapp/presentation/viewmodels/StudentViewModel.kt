@@ -1,96 +1,45 @@
 package com.app.mobileapp.presentation.viewmodels
-
-import android.app.Application
-import android.content.ContentValues
-import androidx.lifecycle.AndroidViewModel
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.app.mobileapp.data.database.StudentDatabaseHelper
+import androidx.lifecycle.ViewModel
 import com.app.mobileapp.data.models.StudentModel
+import com.app.mobileapp.utils.StudentDataSource
 
-class StudentViewModel(application: Application) : AndroidViewModel(application) {
+class StudentViewModel : ViewModel() {
 
-    private val dbHelper = StudentDatabaseHelper(application)
     private val _students = MutableLiveData<List<StudentModel>>()
     val students: LiveData<List<StudentModel>> get() = _students
 
-    init {
-        loadStudents()
-    }
+    private val studentList = mutableListOf<StudentModel>()
 
-    private fun loadStudents() {
-        val studentList = mutableListOf<StudentModel>()
-        val db = dbHelper.readableDatabase
-        val cursor = db.query(
-            StudentDatabaseHelper.TABLE_NAME,
-            arrayOf(StudentDatabaseHelper.COLUMN_ID, StudentDatabaseHelper.COLUMN_NAME),
-            null, null, null, null, null
-        )
-        while (cursor.moveToNext()) {
-            val id = cursor.getString(cursor.getColumnIndexOrThrow(StudentDatabaseHelper.COLUMN_ID))
-            val name = cursor.getString(cursor.getColumnIndexOrThrow(StudentDatabaseHelper.COLUMN_NAME))
-            studentList.add(StudentModel(name, id))
-        }
-        cursor.close()
+    init {
+        studentList.addAll(StudentDataSource().getStudentData())
         _students.value = studentList
     }
 
     fun addStudent(student: StudentModel) {
-        val db = dbHelper.writableDatabase
-        val values = ContentValues().apply {
-            put(StudentDatabaseHelper.COLUMN_ID, student.studentId)
-            put(StudentDatabaseHelper.COLUMN_NAME, student.studentName)
-        }
-        db.insert(StudentDatabaseHelper.TABLE_NAME, null, values)
-        loadStudents()
+        studentList.add(student)
+        _students.value = studentList
     }
 
-    fun editStudent(student: StudentModel, oldStudentId: String) {
-        val db = dbHelper.writableDatabase
-        val values = ContentValues().apply {
-            put(StudentDatabaseHelper.COLUMN_ID, student.studentId)
-            put(StudentDatabaseHelper.COLUMN_NAME, student.studentName)
+    fun editStudent(editedStudent: StudentModel, checkId: String) {
+        val index = studentList.indexOfFirst { it.studentId == checkId }
+        if (index != -1) {
+            studentList[index] = editedStudent
+            _students.value = studentList
+            Log.d("editStudent", "ok3")
+
         }
-        db.update(
-            StudentDatabaseHelper.TABLE_NAME,
-            values,
-            "${StudentDatabaseHelper.COLUMN_ID} = ?",
-            arrayOf(oldStudentId)
-        )
-        loadStudents()
     }
 
     fun deleteStudent(student: StudentModel) {
-        val db = dbHelper.writableDatabase
-        db.delete(
-            StudentDatabaseHelper.TABLE_NAME,
-            "${StudentDatabaseHelper.COLUMN_ID} = ?",
-            arrayOf(student.studentId)
-        )
-        loadStudents()
+        studentList.remove(student)
+        _students.value = studentList
     }
 
     fun undoDelete(student: StudentModel, position: Int) {
-        addStudent(student)
+        studentList.add(position, student)
+        _students.value = studentList
     }
-    fun addAllStudents(students: List<StudentModel>) {
-        val db = dbHelper.writableDatabase
-        db.beginTransaction()
-        try {
-            for (student in students) {
-                val values = ContentValues().apply {
-                    put(StudentDatabaseHelper.COLUMN_ID, student.studentId)
-                    put(StudentDatabaseHelper.COLUMN_NAME, student.studentName)
-                }
-                db.insert(StudentDatabaseHelper.TABLE_NAME, null, values)
-            }
-            db.setTransactionSuccessful()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            db.endTransaction()
-        }
-        loadStudents()
-    }
-
 }

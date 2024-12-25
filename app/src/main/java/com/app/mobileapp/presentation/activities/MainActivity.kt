@@ -3,12 +3,20 @@ package com.app.mobileapp.presentation.activities
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import com.app.mobileapp.R
 import com.app.mobileapp.databinding.ActivityMainBinding
+import com.app.mobileapp.presentation.viewmodels.StudentViewModelDb
+import com.app.mobileapp.utils.StudentDataSource
 
 class MainActivity : AppCompatActivity() {
+  private val viewModel: StudentViewModelDb by viewModels()
+
   private val binding: ActivityMainBinding by lazy {
     ActivityMainBinding.inflate(layoutInflater)
   }
