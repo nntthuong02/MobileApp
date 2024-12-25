@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.app.mobileapp.data.database.StudentDatabaseHelper
 import com.app.mobileapp.data.models.StudentModel
 
-class StudentViewModel(application: Application) : AndroidViewModel(application) {
+class StudentViewModelDb(application: Application) : AndroidViewModel(application) {
 
     private val dbHelper = StudentDatabaseHelper(application)
     private val _students = MutableLiveData<List<StudentModel>>()
@@ -73,24 +73,4 @@ class StudentViewModel(application: Application) : AndroidViewModel(application)
     fun undoDelete(student: StudentModel, position: Int) {
         addStudent(student)
     }
-    fun addAllStudents(students: List<StudentModel>) {
-        val db = dbHelper.writableDatabase
-        db.beginTransaction()
-        try {
-            for (student in students) {
-                val values = ContentValues().apply {
-                    put(StudentDatabaseHelper.COLUMN_ID, student.studentId)
-                    put(StudentDatabaseHelper.COLUMN_NAME, student.studentName)
-                }
-                db.insert(StudentDatabaseHelper.TABLE_NAME, null, values)
-            }
-            db.setTransactionSuccessful()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            db.endTransaction()
-        }
-        loadStudents()
-    }
-
 }

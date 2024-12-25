@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     setContentView(binding.root)
   }
 
+
   // Tạo Option Menu
   override fun onCreateOptionsMenu(menu: Menu?): Boolean {
     menuInflater.inflate(R.menu.menu_main, menu)
