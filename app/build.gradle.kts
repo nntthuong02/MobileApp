@@ -49,8 +49,8 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     //
     // Views/Fragments integration
-    implementation("androidx.navigation:navigation-fragment:2.8.4")
-    implementation("androidx.navigation:navigation-ui:2.8.4")
+    implementation("androidx.navigation:navigation-fragment:2.8.5")
+    implementation("androidx.navigation:navigation-ui:2.8.5")
     // ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     // LiveData
@@ -59,4 +59,11 @@ dependencies {
     testImplementation("junit:junit:4.13.2") // JUnit (test)
     androidTestImplementation("androidx.test.ext:junit:1.2.1") // AndroidX JUnit extension
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    //Splash Screen
+    implementation("androidx.core:core-splashscreen:1.0.1")
+    // navigation
+    implementation("androidx.navigation:navigation-fragment-ktx:2.8.4")
+    implementation("androidx.navigation:navigation-ui-ktx:2.8.4")
+    //datastore
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 }
