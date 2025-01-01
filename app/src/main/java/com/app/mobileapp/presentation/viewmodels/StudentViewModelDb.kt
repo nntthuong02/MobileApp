@@ -57,10 +57,20 @@ class StudentViewModelDb(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    // Hàm mới: Update chỉ tên sinh viên
     fun updateStudentNameAndId(id: String, name: String, newId: String) {
         CoroutineScope(Dispatchers.IO).launch {
             studentDao.updateStudentNameAndId(id, name, newId)
+            loadStudents()
+        }
+    }
+
+    fun updateStudentWithNewId(id: String, name: String, newId: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val student = StudentModel(name,id)
+            val newStudent = StudentModel(name,newId)
+
+            deleteStudent(student)
+            addStudent(newStudent)
             loadStudents()
         }
     }

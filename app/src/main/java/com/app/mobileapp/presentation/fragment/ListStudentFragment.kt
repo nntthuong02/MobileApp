@@ -50,7 +50,7 @@ class ListStudentFragment : Fragment() {
             if (studentName != null && studentId != null) {
                 val student = StudentModel(studentName, studentId)
                 Log.d("editStudent", student.toString())
-                viewModel.editStudent(student)
+                viewModel.updateStudentWithNewId(idStudent, student.studentName, student.studentId)
                 Log.d("editStudent", "ok2")
             }
         }

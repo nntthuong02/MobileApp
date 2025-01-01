@@ -13,9 +13,7 @@ interface StudentDao {
     fun insertStudent(student: StudentModel)
 
     @Update
-    fun updateStudent(student: StudentModel){
-        Log.d("StudentDao", "Updating student" + student.toString())
-    }
+    fun updateStudent(student: StudentModel)
 
     @Delete
     fun deleteStudent(student: StudentModel)
@@ -25,4 +23,13 @@ interface StudentDao {
 
     @Query("UPDATE students_table SET name = :name, id = :newId WHERE id = :id")
     fun updateStudentNameAndId(id: String, name: String, newId: String)
+
+    @Transaction
+    suspend fun updateStudentWithNewId(oldId: String,name: String,  newId: String) {
+        val student = StudentModel(name,oldId)
+        // Xóa sinh viên cũ
+        deleteStudent(student)
+        // Thêm sinh viên mới với id mới
+        insertStudent(StudentModel(newId, name))
+    }
 }
