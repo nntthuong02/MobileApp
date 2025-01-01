@@ -4,6 +4,7 @@ plugins {
     //
     id("kotlin-parcelize")
     id("androidx.navigation.safeargs.kotlin")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -52,8 +53,8 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     //
     // Views/Fragments integration
-    implementation("androidx.navigation:navigation-fragment:2.8.4")
-    implementation("androidx.navigation:navigation-ui:2.8.4")
+    implementation("androidx.navigation:navigation-fragment:2.8.5")
+    implementation("androidx.navigation:navigation-ui:2.8.5")
     // ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     // LiveData
@@ -61,5 +62,11 @@ dependencies {
 
     testImplementation("junit:junit:4.13.2") // JUnit (test)
     androidTestImplementation("androidx.test.ext:junit:1.2.1") // AndroidX JUnit extension
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation("androidx.test.espresso:espresso-xcore:3.6.1")
+    implementation("androidx.room:room-runtime:2.6.1")
+//    ksp
+    ksp("androidx.room:room-compiler:2.6.1")
+//    Room
+    ksp("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
 }

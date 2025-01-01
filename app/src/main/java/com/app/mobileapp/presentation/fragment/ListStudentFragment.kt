@@ -25,6 +25,9 @@ import com.google.android.material.snackbar.Snackbar
 class ListStudentFragment : Fragment() {
     private var binding: FragmentListStudentBinding? = null
     private val viewModel: StudentViewModelDb by viewModels()
+    private var recentlyDeletedStudent: StudentModel? = null
+    private var idStudent: String = ""
+
     private lateinit var studentAdapter: ArrayAdapter<StudentModel>
 
     private val studentData = StudentDataSource().getStudentData()
@@ -44,13 +47,11 @@ class ListStudentFragment : Fragment() {
             // Xử lý kết quả từ Fragment B
             val studentName = result.getString(Constants.EDIT_STUDENT_NAME)
             val studentId = result.getString(Constants.EDIT_STUDENT_ID)
-            val checkStudentId = result.getString(Constants.EDIT_STUDENT_RESULT)
             if (studentName != null && studentId != null) {
                 val student = StudentModel(studentName, studentId)
-                Log.d("editStudent", "ok1")
-                viewModel.editStudent(student, checkStudentId?:"")
+                Log.d("editStudent", student.toString())
+                viewModel.editStudent(student)
                 Log.d("editStudent", "ok2")
-
             }
         }
 
@@ -139,6 +140,7 @@ class ListStudentFragment : Fragment() {
             studentId = student.studentId,
             studentName = student.studentName
         )
+        idStudent = student.studentId
         findNavController().navigate(action)
     }
 
@@ -151,7 +153,7 @@ class ListStudentFragment : Fragment() {
             binding?.let {
                 Snackbar.make(it.root, "Student deleted", Snackbar.LENGTH_LONG)
                     .setAction("Undo") {
-                        viewModel.undoDelete(student, position)
+                        viewModel.addStudent(student)
                     }
                     .show()
             }

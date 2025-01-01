@@ -1,17 +1,19 @@
 package com.app.mobileapp.presentation.viewmodels
 
 import android.app.Application
-import android.content.ContentValues
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.app.mobileapp.data.database.StudentDatabaseHelper
+import com.app.mobileapp.data.database.StudentDatabase
 import com.app.mobileapp.data.models.StudentModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class StudentViewModelDb(application: Application) : AndroidViewModel(application) {
 
-    private val dbHelper = StudentDatabaseHelper(application)
+    private val studentDao = StudentDatabase.getInstance(application).studentDao()
     private val _students = MutableLiveData<List<StudentModel>>()
     val students: LiveData<List<StudentModel>> get() = _students
 
@@ -20,80 +22,46 @@ class StudentViewModelDb(application: Application) : AndroidViewModel(applicatio
     }
 
     private fun loadStudents() {
-        val studentList = mutableListOf<StudentModel>()
-        val db = dbHelper.readableDatabase
-        val cursor = db.query(
-            StudentDatabaseHelper.TABLE_NAME,
-            arrayOf(StudentDatabaseHelper.COLUMN_ID, StudentDatabaseHelper.COLUMN_NAME),
-            null, null, null, null, null
-        )
-        while (cursor.moveToNext()) {
-            val id = cursor.getString(cursor.getColumnIndexOrThrow(StudentDatabaseHelper.COLUMN_ID))
-            val name = cursor.getString(cursor.getColumnIndexOrThrow(StudentDatabaseHelper.COLUMN_NAME))
-            studentList.add(StudentModel(name, id))
+        CoroutineScope(Dispatchers.IO).launch {
+            val studentList = studentDao.getAllStudents()
+            _students.postValue(studentList)
         }
-        cursor.close()
-        _students.value = studentList
-        Log.d("_students", _students.value.toString())
     }
 
     fun addStudent(student: StudentModel) {
-        val db = dbHelper.writableDatabase
-        val values = ContentValues().apply {
-            put(StudentDatabaseHelper.COLUMN_ID, student.studentId)
-            put(StudentDatabaseHelper.COLUMN_NAME, student.studentName)
+        CoroutineScope(Dispatchers.IO).launch {
+            studentDao.insertStudent(student)
+            loadStudents()
         }
-        db.insert(StudentDatabaseHelper.TABLE_NAME, null, values)
-        loadStudents()
     }
 
-    fun editStudent(student: StudentModel, oldStudentId: String) {
-        val db = dbHelper.writableDatabase
-        val values = ContentValues().apply {
-            put(StudentDatabaseHelper.COLUMN_ID, student.studentId)
-            put(StudentDatabaseHelper.COLUMN_NAME, student.studentName)
+    fun editStudent(student: StudentModel) {
+        CoroutineScope(Dispatchers.IO).launch {
+            studentDao.updateStudent(student)
+            Log.d("editStudent", "ok")
+            loadStudents()
         }
-        db.update(
-            StudentDatabaseHelper.TABLE_NAME,
-            values,
-            "${StudentDatabaseHelper.COLUMN_ID} = ?",
-            arrayOf(oldStudentId)
-        )
-        loadStudents()
     }
 
     fun deleteStudent(student: StudentModel) {
-        val db = dbHelper.writableDatabase
-        db.delete(
-            StudentDatabaseHelper.TABLE_NAME,
-            "${StudentDatabaseHelper.COLUMN_ID} = ?",
-            arrayOf(student.studentId)
-        )
-        loadStudents()
-    }
-
-    fun undoDelete(student: StudentModel, position: Int) {
-        addStudent(student)
+        CoroutineScope(Dispatchers.IO).launch {
+            studentDao.deleteStudent(student)
+            loadStudents()
+        }
     }
 
     fun addAllStudents(students: List<StudentModel>) {
-        val db = dbHelper.writableDatabase
-        db.beginTransaction()
-        try {
-            for (student in students) {
-                val values = ContentValues().apply {
-                    put(StudentDatabaseHelper.COLUMN_ID, student.studentId)
-                    put(StudentDatabaseHelper.COLUMN_NAME, student.studentName)
-                }
-                db.insert(StudentDatabaseHelper.TABLE_NAME, null, values)
-            }
-            db.setTransactionSuccessful()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            db.endTransaction()
+        CoroutineScope(Dispatchers.IO).launch {
+            studentDao.insertAllStudents(students)
+            loadStudents()
         }
-        loadStudents()
     }
 
+    // Hàm mới: Update chỉ tên sinh viên
+    fun updateStudentNameAndId(id: String, name: String, newId: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            studentDao.updateStudentNameAndId(id, name, newId)
+            loadStudents()
+        }
+    }
 }
